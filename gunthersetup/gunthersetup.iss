@@ -6,7 +6,8 @@
 #define MyAppPublisher "RadioFyL"
 #define MyAppURL "http://www.radiofyl.com.ar/"
 #define MyAppExeName "MyProg.exe"
-#define RepoPath "E:\Documents\trabajo\radiofyl\repos\installers\gunthersetup"
+#define RepoPath "c:\guntherinstall"
+#define sc = ";"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -32,6 +33,9 @@ SolidCompression=yes
 ChangesEnvironment=yes
 UninstallFilesDir={win}
 
+[InstallDelete]
+Type: filesandordirs; Name: "c:\Gunther"
+
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
@@ -41,13 +45,15 @@ Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 ;Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "{#RepoPath}\python-2.7.3.msi"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
-Source: "{#RepoPath}\setuptools-0.6c11.win32-py2.7.exe"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
-Source: "{#RepoPath}\Git-1.8.4-preview20130916.exe"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
-Source: "{#RepoPath}\PyQt-Py2.7-x86-gpl-4.9.4-1.exe"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
-Source: "{#RepoPath}\pyaudio-0.2.4.py27.exe"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
-Source: "{#RepoPath}\liquidsoap-win32-1.1.1.zip"; DestDir: "{tmp}\guntherinstall"; DestName: "liquidsoap.zip"; Flags: ignoreversion
-Source: "{#RepoPath}\install-windows-local.py"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\python-2.7.3.msi"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\setuptools-0.6c11.win32-py2.7.exe"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\Git-1.8.4-preview20130916.exe"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\PyQt-Py2.7-x86-gpl-4.9.4-1.exe"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\pyaudio-0.2.4.py27.exe"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\liquidsoap-win32-1.1.1.zip"; DestDir: "{tmp}\guntherinstall"; DestName: "liquidsoap.zip"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\install-dependencies.py"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\install-repo.py"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
+Source: "{#RepoPath}\gunthersetup\install-configs.py"; DestDir: "{tmp}\guntherinstall"; Flags: ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -60,20 +66,18 @@ Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 [Run]
 Filename: "msiexec.exe"; Parameters: "/qn /i ""{tmp}\guntherinstall\python-2.7.3.msi"""; 
 Filename: "{tmp}\guntherinstall\Git-1.8.4-preview20130916.exe"; Parameters: "/SILENT /NORESTART"
-Filename: "c:\python27\python.exe"; Parameters: """{tmp}\guntherinstall\install-windows-local.py"""
-;lo ejecuto dos veces porque la primera instala las dependencias y la segunda ya las tiene instaladas.
-Filename: "c:\python27\python.exe"; Parameters: """{tmp}\guntherinstall\install-windows-local.py""" 
-
+Filename: "c:\python27\python.exe"; Parameters: """{tmp}\guntherinstall\install-dependencies.py"""
+Filename: "c:\python27\python.exe"; Parameters: """{tmp}\guntherinstall\install-repo.py"""
+Filename: "c:\python27\python.exe"; Parameters: """{tmp}\guntherinstall\install-configs.py"""
 
 [Registry]
-Root: HKLM;Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz;ValueName: "Path"; ValueData: "{olddata};{pf}\Git\bin;"; Check: NeedsAddPath('{pf}\Git\bin');
+Root: HKLM;Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz;ValueName: "Path"; ValueData: "{olddata};{pf}\Git\bin"; Check: NeedsAddPath('{pf}\Git\bin');
 
 [Code]
 function NeedsAddPath(Param: string): boolean;
 var
   OrigPath: string;
 begin
-   DelTree('C:\Gunther', True, True, True);
    if not RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SYSTEM\CurrentControlSet\Control\Session Manager\Environment', 'Path', OrigPath) then
       begin
          Result:= True;
