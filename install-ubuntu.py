@@ -53,13 +53,28 @@ except:
         exit(ret)
 
 try:
-    import pysvn
+    import pip
 except:
-    print u"No se encontró el módulo pysvn. Es necesario descargarlo e instalarlo."
-    print "sudo apt-get install python-svn"
-    ret = os.system("sudo apt-get install python-svn")
+    print u"No se encontró el módulo pip. Es necesario descargarlo e instalarlo."
+    print "sudo apt-get install python-setuptools"
+    ret = os.system("sudo apt-get install python-pip")
     if ret != 0:
-        print u"Ocurrió un error durante la instalación de pysvn."
+        print u"Ocurrió un error durante la instalación de setuptools."
+        exit(ret)
+
+try:
+    import git
+except:
+    print u"No se encontró el módulo gitpython. Es necesario descargarlo e instalarlo."
+    print "sudo apt-get install git"
+    ret = os.system("sudo apt-get install git")
+    if ret != 0:
+        print u"Ocurrió un error durante la instalación de git."
+        exit(ret)
+    print "sudo pip install gitpython"
+    ret = os.system("sudo pip install gitpython")
+    if ret != 0:
+        print u"Ocurrió un error durante la instalación de gitpython."
         exit(ret)
 
 try:
@@ -99,8 +114,8 @@ try:
     import pyaudio
 except:
     print u"No se encontró el módulo pyaudio. Es necesario descargarlo e instalarlo."
-    print "sudo apt-get install python-pyaudio"
-    ret = os.system("sudo apt-get install python-pyaudio")
+    print "sudo pip install pyaudio"
+    ret = os.system("sudo pip install pyaudio")
     if ret != 0:
         print u"Ocurrió un error durante la instalación de pyaudio."
         exit(ret)
@@ -109,8 +124,8 @@ try:
     import requests
 except:
     print u"No se encontró el módulo requests. Es necesario descargarlo e instalarlo."
-    print "sudo apt-get install python-requests"
-    ret = os.system("sudo apt-get install python-requests")
+    print "sudo pip install requests"
+    ret = os.system("sudo pip install requests")
     if ret != 0:
         print u"Ocurrió un error durante la instalación de requests."
         exit(ret)
@@ -130,7 +145,6 @@ if directorio == None:
 
 
 #Bajo Günther del repo
-svnclient = pysvn.Client()
 #chequeo si el directorio actual es un checkout del repo
 info = None
 GuntherPath = CreateInstallDir() #os.path.join(os.getcwd(), "Gunther")
@@ -140,7 +154,7 @@ if not os.path.exists(GuntherPath):
 os.chdir(GuntherPath)
 
 try:
-    info = svnclient.info(GuntherPath)
+    #repo = git(GuntherPath)
 except Exception as e:
     svnclient.checkout('svn://svn.code.sf.net/p/radiocefyl/code/trunk/gunther', GuntherPath)
     info = svnclient.info(GuntherPath)
