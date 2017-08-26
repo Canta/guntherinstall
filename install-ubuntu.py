@@ -151,16 +151,6 @@ except:
         exit(ret)
 
 try:
-    import pyaudio
-except:
-    print u"No se encontró el módulo pyaudio. Es necesario descargarlo e instalarlo."
-    print "pip install pyaudio"
-    ret = os.system("pip install pyaudio")
-    if ret != 0:
-        print u"Ocurrió un error durante la instalación de pyaudio."
-        exit(ret)
-
-try:
     import requests
 except:
     print u"No se encontró el módulo requests. Es necesario descargarlo e instalarlo."
@@ -177,8 +167,8 @@ for path in os.environ.get('PATH', '').split(':'):
         directorio = path
 if directorio == None:
     print u"No se encontró el Liquidsoap. Es necesario descargarlo e instalarlo."
-    print "apt-get -y install liquidsoap"
-    ret = os.system("apt-get -y install liquidsoap")
+    print "apt-get -y install liquidsoap python-pyaudio python-simplejson"
+    ret = os.system("apt-get -y install liquidsoap python-pyaudio python-simplejson")
     if ret != 0:
         print u"Ocurrió un error durante la instalación de Liquidsoap."
         exit(ret)
@@ -190,7 +180,7 @@ info = None
 GuntherPath = CreateInstallDir() #os.path.join(os.getcwd(), "Gunther")
 print u"Path donde se instalará Günther: " + GuntherPath
 if os.path.exists(GuntherPath):
-    if query_si_no("Ya existe el directorio de Günther("+GuntherPath+").\n¿Desea eliminarlo para instalar nuevamente el programa?\nATENCIÓN: ESTA ACCIÓN PUEDE DESHACERSE\nSi tiene información guardada en ese directorio, copiela primero a otro directorio y recién entonces escriba 'si'.","no"):
+    if query_si_no("Ya existe el directorio de Günther("+GuntherPath+").\n¿Desea eliminarlo para instalar nuevamente el programa?\nATENCIÓN: ESTA ACCIÓN NO PUEDE DESHACERSE\nSi tiene información guardada en ese directorio, copiela primero a otro directorio y recién entonces escriba 'si'.","no"):
         print("Borrando "+GuntherPath+"...")
         os.system("rm -r \""+GuntherPath+"\"")
         print(GuntherPath+" borrado con éxito.")
